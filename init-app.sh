@@ -19,4 +19,4 @@ sudo snap install aws-cli --classic
 sudo systemctl start docker
 aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 012602196656.dkr.ecr.eu-north-1.amazonaws.com
 docker pull 012602196656.dkr.ecr.eu-north-1.amazonaws.com/pj-student-app:latest
-sudo docker run -i --env "${db_host}" -p 8080:8080 012602196656.dkr.ecr.eu-north-1.amazonaws.com/pj-student-app:latest
+sudo docker run -i --env host="${db_host}" -p 8080:8080 012602196656.dkr.ecr.eu-north-1.amazonaws.com/pj-student-app:latest

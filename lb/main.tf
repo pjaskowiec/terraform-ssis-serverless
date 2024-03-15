@@ -1,5 +1,5 @@
 variable "instance_id" {}
-variable "private_subnet_1" {}
+variable "public_subnet_1" {}
 variable "lb-sg" {}
 
 resource "aws_elb" "pj-mgr-lb" {
@@ -22,7 +22,7 @@ resource "aws_elb" "pj-mgr-lb" {
 
   instances                   = ["${var.instance_id}"]
   security_groups             = ["${var.lb-sg}"]
-  subnets                     = ["${var.private_subnet_1}"]
+  subnets                     = ["${var.public_subnet_1}"]
 
   cross_zone_load_balancing   = false
   idle_timeout                = 400

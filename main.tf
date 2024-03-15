@@ -111,7 +111,7 @@ module "lb" {
 
   instance_id = module.ec2_instance.id
   lb-sg       = module.security-groups.lb-sg
-  private_subnet_1 = module.vpc.private_subnets[0]
+  public_subnet_1 = module.vpc.public_subnets[0]
 }
 
 
