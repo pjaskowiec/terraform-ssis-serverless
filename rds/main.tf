@@ -15,18 +15,19 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 }
 
 resource "aws_db_instance" "webapp-db" {
-  identifier           = "webapp-db"
-  allocated_storage    = 20
-  storage_type         = "gp2"
-  engine               = "mysql" 
-  engine_version       = "5.7"
-  instance_class       = "db.t3.micro"
-  db_name              = "${var.dbname}"
-  username             = "${var.username}"
-  password             = "${var.password}"
-  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
+  identifier             = "webapp-db"
+  allocated_storage      = 20
+  storage_type           = "gp2"
+  engine                 = "mysql"
+  engine_version         = "5.7"
+  instance_class         = "db.t3.micro"
+  db_name                = var.dbname
+  username               = var.username
+  password               = var.password
+  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids = [var.db_security_group]
-  skip_final_snapshot = true
+  publicly_accessible    = true
+  skip_final_snapshot    = true
 
   tags = {
     Name = "webapp-db"
