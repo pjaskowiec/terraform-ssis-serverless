@@ -11,6 +11,7 @@ provider "aws" {
   region = "eu-north-1"
 }
 
+# endpoint do secretmanagera
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.4.0"
@@ -21,6 +22,9 @@ module "vpc" {
   azs             = ["eu-north-1a", "eu-north-1b"]
   private_subnets = ["10.0.8.0/24"]
   public_subnets  = ["10.0.0.0/24", "10.0.4.0/24", "10.0.6.0/24"]
+
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   # enable_nat_gateway = true
   # single_nat_gateway = true
@@ -45,7 +49,15 @@ module "security-groups" {
 module "lambda" {
   source                = "./lambda"
   lambda_security_group = module.security-groups.lambda-security-group
-  public_subnet_1_id    = module.vpc.public_subnets[0]
+  public_subnet_1_id    = module.vpc.private_subnets[0]
+}
+
+
+module "endpoints" {
+  source = "./endpoints"
+  vpc_id = module.vpc.vpc_id
+  lambda_security_group = module.security-groups.endpoints-security-group
+  public_subnet_1_id    = module.vpc.private_subnets[0]
 }
 
 data "aws_secretsmanager_secret" "db-secrets" {
@@ -66,7 +78,6 @@ module "rds" {
   db_security_group   = module.security-groups.db-security-group
 }
 
-
 resource "null_resource" "db_setup" {
   provisioner "local-exec" {
 
@@ -77,7 +88,7 @@ resource "null_resource" "db_setup" {
     }
   }
 }
-
+# pip install --target ./python -r req.txt 
 resource "aws_secretsmanager_secret_version" "secret-version-update" {
   secret_id = data.aws_secretsmanager_secret.db-secrets.id
   secret_string = jsonencode(

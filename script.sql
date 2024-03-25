@@ -8,8 +8,8 @@ CREATE TABLE `admin` (
 );
 
 INSERT INTO `admin` (username, password)
-VALUES ('eden', 'sha256$ULUS96W3djTrRi7e$233ff68eb2b2c3593440e1d6c0dabaaea17a9f246328db4ab1f09d05f5929568');
-
+VALUES ('eden', 'sha256$YCJrLaAw6HujeL4M$d2a34ae4f6cf64ed9b5cdbc4f59f993fc9bdfaf53e808a648ecb4a2572b8d160');
+--  eden / admin
 CREATE TABLE `course` (
     code VARCHAR(10) NOT NULL,
     name VARCHAR(50) NOT NULL,

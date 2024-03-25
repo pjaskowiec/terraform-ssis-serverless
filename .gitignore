@@ -36,3 +36,7 @@ terraform.rc
 # Ignore zips from Lambda builds and venv
 *.zip
 .venv
+package
+python
+
+__pycache__
