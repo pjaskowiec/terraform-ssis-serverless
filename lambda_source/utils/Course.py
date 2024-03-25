@@ -13,7 +13,7 @@ class Course():
         self.cursor = cursor
     
 
-    def get_all(self, page_num: int = None, item_per_page: int = None, paginate: bool = True) -> list:
+    def get_all(self, page_num: int = None, item_per_page: int = None, paginate: bool = False) -> list:
         if not paginate:
             return self.course_list(self.cursor)
         offset = (page_num - 1) * item_per_page
@@ -54,7 +54,8 @@ class Course():
 
 
     def search(self, keyword: str = None, field: str = None) -> list:
-        keyword = keyword.upper()
+        if keyword is not None:
+            keyword = keyword.upper()
         courses = self.get_all(paginate=False)
         result = []
 

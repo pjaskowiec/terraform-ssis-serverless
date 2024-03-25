@@ -18,8 +18,7 @@ def get_db_credentials():
 
 
 def connect_to_database():
-    # credentials = get_db_credentials()
-    credentials = {'host': '0.0.0.0', 'dbname': 'ssisdb', 'username': 'root', 'password': 'andres100' }
+    credentials = get_db_credentials()
     db = mysql.connect(
             host = credentials["host"],
             user = credentials["username"],
@@ -47,10 +46,10 @@ def lambda_handler(event, context):
         db.commit()
         return {'statusCode': 200, 'body': student}
     elif type == 'update':
-        student = Student(
-            cursor, event['id'], event['firstName'], event['middleName'],
-            event['lastName'], event['yearLevel'], event['gender'])
-        student.update()
+        student = {'id': event['id'], 'firstname': event['firstName'], 'middlename': event['middleName'],
+            'lastname': event['lastName'], 'yearlevel': event['yearLevel'], 'gender': event['gender'],
+            'course': event['course']}
+        update_student_record(cursor, student)
         db.commit()
         return {'statusCode': 200, 'body': student}
     elif type == 'delete':

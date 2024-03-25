@@ -1,1 +1,1 @@
-__package__ = ''
+__package__ = 'student_utils'
