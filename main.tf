@@ -54,8 +54,8 @@ module "lambda" {
 
 
 module "endpoints" {
-  source = "./endpoints"
-  vpc_id = module.vpc.vpc_id
+  source                = "./endpoints"
+  vpc_id                = module.vpc.vpc_id
   lambda_security_group = module.security-groups.endpoints-security-group
   public_subnet_1_id    = module.vpc.private_subnets[0]
 }

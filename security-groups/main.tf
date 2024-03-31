@@ -49,17 +49,17 @@ resource "aws_security_group" "lambda_sg" {
 resource "aws_security_group" "secrets_manager_sg" {
   name        = "endpoint-sg-secrets"
   description = "Security group for accessing AWS Secrets Manager"
-  vpc_id = var.vpc_id
+  vpc_id      = var.vpc_id
 
   # Define inbound rule for HTTPS traffic
   ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Allow access from anywhere, you may restrict it further
+    cidr_blocks = ["0.0.0.0/0"] # Allow access from anywhere, you may restrict it further
   }
 
-    egress {
+  egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1" # All protocols

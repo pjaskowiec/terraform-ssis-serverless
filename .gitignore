@@ -37,7 +37,8 @@ terraform.rc
 *.zip
 .venv
 package
-python
+*/python/python/*
+!*/python/python/utils
 
 __pycache__
 ssis
