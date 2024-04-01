@@ -37,6 +37,7 @@ terraform.rc
 *.zip
 .venv
 package
+*/utils
 */python/python/*
 !*/python/python/utils
 

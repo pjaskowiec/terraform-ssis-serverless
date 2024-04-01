@@ -1,5 +1,6 @@
 variable "lambda_security_group" {}
 variable "public_subnet_1_id" {}
+variable "api_gateway_arn" {}
 
 data "aws_iam_policy_document" "assume_role" {
   statement {
@@ -25,6 +26,20 @@ data "aws_iam_policy" "SecretsAccess" {
 
 data "aws_iam_policy" "AWSLambdaVPCAccessExecutionRole" {
   arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_basic" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role = aws_iam_role.iam_for_lambda.name
+}
+
+resource "aws_lambda_permission" "apigw_lambda" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_admin.function_name
+  principal = "apigateway.amazonaws.com"
+
+  source_arn = "${var.api_gateway_arn}/*/*"
 }
 
 resource "aws_iam_role_policy_attachment" "lambda-secrets-access" {

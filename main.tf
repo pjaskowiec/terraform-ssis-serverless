@@ -50,14 +50,20 @@ module "lambda" {
   source                = "./lambda"
   lambda_security_group = module.security-groups.lambda-security-group
   public_subnet_1_id    = module.vpc.private_subnets[0]
+  api_gateway_arn = module.api-gateway.api_gateway_arn
 }
-
 
 module "endpoints" {
   source                = "./endpoints"
   vpc_id                = module.vpc.vpc_id
   lambda_security_group = module.security-groups.endpoints-security-group
   public_subnet_1_id    = module.vpc.private_subnets[0]
+}
+
+module "api-gateway" {
+  source = "./api-gateway"
+
+  lambda_admin_uri = module.lambda.lambda_admin_uri
 }
 
 data "aws_secretsmanager_secret" "db-secrets" {

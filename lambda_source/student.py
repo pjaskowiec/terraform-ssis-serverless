@@ -64,3 +64,4 @@ def lambda_handler(event, context):
 #     'middleName': 'Will', 'lastName': 'Jenkish', 'yearLevel': 2, 'gender': 'Male',
 #     'course': 'Bachelor of Science in Civil Engineering'}, 2))
 # print(lambda_handler({'type': 'search', 'keyword': 'Andrzej', 'sort_by': 'firstname'}, 1))
+# print(lambda_handler({'type': 'get_all_students'}, 1))
