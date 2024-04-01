@@ -87,7 +87,8 @@ class Student():
 
 
     def search(self, keyword: str = None, field: str = None) -> list:
-        keyword = keyword.upper()
+        if keyword is not None:
+            keyword = keyword.upper()
         students = self.get_all(paginate=False)
         result = []
 
@@ -118,8 +119,7 @@ class Student():
             row_allcaps = [str(cell).upper() for cell in row]
 
             if field == 'all':
-                if keyword in row_allcaps:
-                    result.append(row)
+                result.append(row)
             elif field == 'id':
                 if keyword == row_allcaps[0]:
                     result.append(row)

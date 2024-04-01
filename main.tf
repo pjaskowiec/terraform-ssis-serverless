@@ -11,7 +11,6 @@ provider "aws" {
   region = "eu-north-1"
 }
 
-# endpoint do secretmanagera
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.4.0"
@@ -26,9 +25,6 @@ module "vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  # enable_nat_gateway = true
-  # single_nat_gateway = true
-
   enable_vpn_gateway = true
 
   tags = {
@@ -42,15 +38,11 @@ module "security-groups" {
   vpc_id = module.vpc.vpc_id
 }
 
-# IAM role to read and write in secrets manager - SecretsManagerReadWrite
-# evenutally extra deps in zip
-# Lambda in VPC
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function
 module "lambda" {
   source                = "./lambda"
   lambda_security_group = module.security-groups.lambda-security-group
   public_subnet_1_id    = module.vpc.private_subnets[0]
-  api_gateway_arn = module.api-gateway.api_gateway_arn
+  api_gateway_arn = module.api-gateway-rest.api_gateway_arn
 }
 
 module "endpoints" {
@@ -60,10 +52,48 @@ module "endpoints" {
   public_subnet_1_id    = module.vpc.private_subnets[0]
 }
 
-module "api-gateway" {
+module "api-gateway-rest" {
+  source = "./api-gateway-rest"
+}
+
+module "api-gateway-admin" {
   source = "./api-gateway"
 
-  lambda_admin_uri = module.lambda.lambda_admin_uri
+  lambda_uri = module.lambda.lambda_admin_uri
+  restapi_id = module.api-gateway-rest.api-gateway-id
+  parent_api_gateway_id = module.api-gateway-rest.parent-api-gateway-id
+  passed_path = "check-user"
+  resource_id = module.api-gateway-rest.admin-resource
+}
+
+module "api-gateway-student" {
+  source = "./api-gateway"
+
+  lambda_uri = module.lambda.lambda_student_uri
+  restapi_id = module.api-gateway-rest.api-gateway-id
+  parent_api_gateway_id = module.api-gateway-rest.parent-api-gateway-id
+  passed_path = "operation"
+  resource_id = module.api-gateway-rest.student-resource
+}
+
+module "api-gateway-course" {
+  source = "./api-gateway"
+
+  lambda_uri = module.lambda.lambda_course_uri
+  restapi_id = module.api-gateway-rest.api-gateway-id
+  parent_api_gateway_id = module.api-gateway-rest.parent-api-gateway-id
+  passed_path = "operation"
+  resource_id = module.api-gateway-rest.course-resource
+}
+
+module "api-gateway-college" {
+  source = "./api-gateway"
+
+  lambda_uri = module.lambda.lambda_college_uri
+  restapi_id = module.api-gateway-rest.api-gateway-id
+  parent_api_gateway_id = module.api-gateway-rest.parent-api-gateway-id
+  passed_path = "operation"
+  resource_id = module.api-gateway-rest.college-resource
 }
 
 data "aws_secretsmanager_secret" "db-secrets" {
@@ -108,4 +138,20 @@ resource "aws_secretsmanager_secret_version" "secret-version-update" {
   depends_on = [
     module.rds
   ]
+}
+
+resource "local_file" "config_js" {
+  filename = "static/js/config.js"
+  content  = <<-EOT
+    const admin_login = "${module.api-gateway-admin.lambda_url}${module.api-gateway-admin.lambda_path}";
+    const student_lambda = "${module.api-gateway-admin.lambda_url}${module.api-gateway-student.lambda_path}";
+    const college_lambda = "${module.api-gateway-admin.lambda_url}${module.api-gateway-college.lambda_path}";
+    const course_lambda = "${module.api-gateway-admin.lambda_url}${module.api-gateway-course.lambda_path}";
+  EOT
+}
+
+module "static-website-s3" {
+  source = "./static-hosting"
+
+  depends_on = [ local_file.config_js ]
 }

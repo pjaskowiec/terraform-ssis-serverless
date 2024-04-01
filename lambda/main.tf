@@ -33,10 +33,37 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
   role = aws_iam_role.iam_for_lambda.name
 }
 
-resource "aws_lambda_permission" "apigw_lambda" {
+resource "aws_lambda_permission" "apigw_lambda_admin" {
   statement_id = "AllowExecutionFromAPIGateway"
   action = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_admin.function_name
+  principal = "apigateway.amazonaws.com"
+
+  source_arn = "${var.api_gateway_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "apigw_lambda_college" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_college.function_name
+  principal = "apigateway.amazonaws.com"
+
+  source_arn = "${var.api_gateway_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "apigw_lambda_student" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_studnet.function_name
+  principal = "apigateway.amazonaws.com"
+
+  source_arn = "${var.api_gateway_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "apigw_lambda_course" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_course.function_name
   principal = "apigateway.amazonaws.com"
 
   source_arn = "${var.api_gateway_arn}/*/*"

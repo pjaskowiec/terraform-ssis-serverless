@@ -1,5 +1,3 @@
-const url = 'https://6lhk38g7o1.execute-api.eu-north-1.amazonaws.com/prod/admin/check-user';
-
 function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -28,7 +26,7 @@ function validate_user(username, password) {
       body: JSON.stringify(data)
     };
     
-    return fetch(url, requestOptions)
+    return fetch(admin_login, requestOptions)
       .then(response => response.json())
       .then(data => {
           if (data.statusCode === 200) {

@@ -1,0 +1,26 @@
+1. List of API endpoints:
+admin:
+/admin - login {username: XXX, password: XXX}
+student:
+/student/add - {id, firstname, middlename, lastname, yearlevel, gender, course}
+/student/update - {id, firstname, middlename, lastname, yearlevel, gender, course}
+/student/delete - {id}
+/student/get_all_students - GET
+/student/search - {keyword, sort_by}
+course:
+/course/add
+/course/update
+/course/delete
+/course/get_all_courses - GET
+/course/search - {keyword, sort_by}
+college:
+/college/add
+/college/update
+/college/delete
+/college/get_all_colleges - GET
+/college/search - {keyword, sort_by}
+
+2. Redirections to subpages, based on dirs
+3. Add const url API gateway dynamically to static
+4. Upload code to S3
+5. Enable static

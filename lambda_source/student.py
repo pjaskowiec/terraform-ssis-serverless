@@ -53,15 +53,8 @@ def lambda_handler(event, context):
         db.commit()
         return {'statusCode': 200, 'body': student}
     elif type == 'delete':
-        Student().delete(event['id'])
+        Student().delete(cursor, event['id'])
         db.commit()
         return {'statusCode': 200, 'body': 'The records were deleted successfully'}
     cursor.close()
     return {'statusCode': 404, 'body': 'No function were found in used type.'}
-
-# print(lambda_handler({
-#     'type': 'add', 'id': '2018-0000', 'firstName': 'Sam',
-#     'middleName': 'Will', 'lastName': 'Jenkish', 'yearLevel': 2, 'gender': 'Male',
-#     'course': 'Bachelor of Science in Civil Engineering'}, 2))
-# print(lambda_handler({'type': 'search', 'keyword': 'Andrzej', 'sort_by': 'firstname'}, 1))
-# print(lambda_handler({'type': 'get_all_students'}, 1))
