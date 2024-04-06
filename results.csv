@@ -1,0 +1,9 @@
+Memory Size,Duration (in ms),Price Per 1M Invocations (in $)
+128MB,7.40,0.21
+256MB,7.70,0.42
+512MB,7.61,0.83
+1024MB,7.64,1.67
+1536MB,7.62,2.50
+2048MB,7.41,3.33
+2560MB,7.75,4.17
+3008MB,7.34,4.90

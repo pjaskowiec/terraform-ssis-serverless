@@ -187,3 +187,30 @@ resource "aws_lambda_function" "lambda_college" {
 
   runtime = "python3.10"
 }
+
+resource "aws_cloudwatch_log_group" "function_log_group" {
+  name              = "/aws/lambda/${aws_lambda_function.lambda_studnet.function_name}"
+  retention_in_days = 7
+}
+
+data "aws_iam_policy" "CloudWatchAccess" {
+  arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda-cloudwatch-access" {
+  role       = aws_iam_role.iam_for_lambda.name
+  policy_arn = data.aws_iam_policy.CloudWatchAccess.arn
+}
+
+resource "aws_cloudwatch_query_definition" "example" {
+  name = "custom_query"
+
+  log_group_names = [
+    aws_cloudwatch_log_group.function_log_group.name
+  ]
+
+  query_string = <<EOF
+filter @type = "REPORT"
+| stats avg(@duration) as AvgExecutionTime
+EOF
+}

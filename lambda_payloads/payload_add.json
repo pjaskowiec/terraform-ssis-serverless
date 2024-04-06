@@ -1,0 +1,9 @@
+{
+    "type": "add",
+    "firstName": "Test",
+    "middleName": "Testowy",
+    "course": "Bachelor of Science in Computer Science",
+    "lastName": "Testowiak",
+    "yearLevel": "1",
+    "gender": "male"
+}
